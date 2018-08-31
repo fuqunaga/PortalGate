@@ -4999,6 +4999,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65ce7585a4cf9c44bf16800603f0b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  virtualCameraPrefab: {fileID: 1213528047654480, guid: 364f25b197af77b4e84f77fd30b6e4b7,
+    type: 2}
   pair: {fileID: 610846721}
 --- !u!64 &171358929
 MeshCollider:
@@ -5063,7 +5065,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 171358927}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 1.08, y: 1.12, z: 1.4}
+  m_LocalPosition: {x: 1.08, y: 1.12, z: -1.35}
   m_LocalScale: {x: 1, y: 2, z: 1}
   m_Children:
   - {fileID: 351831911}
@@ -19661,6 +19663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65ce7585a4cf9c44bf16800603f0b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  virtualCameraPrefab: {fileID: 1213528047654480, guid: 364f25b197af77b4e84f77fd30b6e4b7,
+    type: 2}
   pair: {fileID: 171358928}
 --- !u!1001 &617675636
 Prefab:

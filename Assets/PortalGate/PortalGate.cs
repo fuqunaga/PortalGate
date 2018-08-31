@@ -7,13 +7,12 @@ namespace PortalGateSystem
 {
     public class PortalGate : MonoBehaviour
     {
-        static HashSet<Camera> virtualCameras = new HashSet<Camera>();
-
+        public GameObject virtualCameraPrefab;
         public PortalGate pair;
-        Quaternion rotY = Quaternion.Euler(0f, 180f, 0f);
 
-        Dictionary<Camera, Camera> cameraTable = new Dictionary<Camera, Camera>();
+        public Quaternion gateRot { get; } = Quaternion.Euler(0f, 180f, 0f);
 
+        Dictionary<Camera, VirtualCamera> virtualCameraTable = new Dictionary<Camera, VirtualCamera>();
 
         Material material;
 
@@ -30,71 +29,36 @@ namespace PortalGateSystem
             Destroy(material);
         }
 
-        private void LateUpdate()
-        {
-            cameraTable.ToList().ForEach(pair =>
-            {
-                var cam = pair.Key;
-                var virtualCam = pair.Value;
-
-                UpdatePairCamera(cam, virtualCam);
-            });
-        }
-
         private void OnWillRenderObject()
         {
             var cam = Camera.current;
 
-            if ( !virtualCameras.Contains(cam))
+            if ( cam.gameObject.GetComponent<VirtualCamera>() == null )
             {
-                if ( !cameraTable.ContainsKey(cam))
+                VirtualCamera vc;
+                if ( !virtualCameraTable.TryGetValue(cam, out vc))
                 {
-                    cameraTable[cam] = CreatePairCamera(cam);
+                    vc = virtualCameraTable[cam] = CreateVirtualCamera(cam);
                 }
+
+                material.mainTexture = vc.targetTexture;
             }
         }
 
         #endregion
 
 
-        Camera CreatePairCamera(Camera cam)
+        VirtualCamera CreateVirtualCamera(Camera cam)
         {
-            var go = new GameObject(cam.name + "_pair");
+            var go = Instantiate(virtualCameraPrefab);
+            go.name = cam.name + "_virtual";
             go.transform.SetParent(transform);
 
-            var c = go.AddComponent<Camera>();
-            c.CopyFrom(cam);
-            c.depth = cam.depth - 1;
+            var vc = go.GetComponent<VirtualCamera>();
+            vc.parentCamera = cam;
+            vc.parentGate = this;
 
-            var baseTex = cam.targetTexture;
-            var size = (baseTex != null)
-                ? new Vector2Int(baseTex.width, baseTex.height)
-                : new Vector2Int(Screen.width, Screen.height);
-
-            var tex = new RenderTexture(size.x, size.y, 24);
-
-            c.targetTexture = tex;
-
-            virtualCameras.Add(c);
-
-            return c;
-        }
-
-
-        void UpdatePairCamera(Camera cam, Camera virtualCam)
-        {
-            var camTrans = cam.transform;
-
-            var localPos = transform.InverseTransformPoint(camTrans.position);
-            var localRot = Quaternion.Inverse(transform.rotation) * camTrans.rotation;
-
-            var pairTrans = pair.transform;
-            var pos = pairTrans.TransformPoint(rotY * localPos);
-            var rot = pairTrans.rotation * rotY * localRot;
-
-            virtualCam.transform.SetPositionAndRotation(pos, rot);
-
-            material.mainTexture = virtualCam.targetTexture;
+            return vc;
         }
     }
 }

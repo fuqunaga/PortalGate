@@ -1,4 +1,4 @@
-﻿Shader "Custom/PortalGate"
+﻿Shader "PortalGate/PortalGate"
 {
 	Properties
 	{
