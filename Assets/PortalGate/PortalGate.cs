@@ -7,6 +7,8 @@ namespace PortalGateSystem
 {
     public class PortalGate : MonoBehaviour
     {
+        static HashSet<Camera> virtualCameras = new HashSet<Camera>();
+
         public PortalGate pair;
         Quaternion rotY = Quaternion.Euler(0f, 180f, 0f);
 
@@ -14,6 +16,8 @@ namespace PortalGateSystem
 
 
         Material material;
+
+        #region Unity
 
         private void Start()
         {
@@ -26,40 +30,32 @@ namespace PortalGateSystem
             Destroy(material);
         }
 
+        private void LateUpdate()
+        {
+            cameraTable.ToList().ForEach(pair =>
+            {
+                var cam = pair.Key;
+                var virtualCam = pair.Value;
+
+                UpdatePairCamera(cam, virtualCam);
+            });
+        }
+
         private void OnWillRenderObject()
         {
             var cam = Camera.current;
 
-            var isPair = cameraTable.ContainsValue(cam);
-
-            if (!isPair)
+            if ( !virtualCameras.Contains(cam))
             {
-                var camTrans = cam.transform;
-
-                var localPos = transform.InverseTransformPoint(camTrans.position);
-                var localRot = Quaternion.Inverse(transform.rotation) * camTrans.rotation;
-
-                var pairTrans = pair.transform;
-                var pos = pairTrans.TransformPoint(rotY * localPos);
-                var rot = pairTrans.rotation * rotY * localRot;
-
-                var pairCam = GetPairCamera(cam);
-                pairCam.transform.SetPositionAndRotation(pos, rot);
-
-                material.mainTexture = pairCam.targetTexture;
+                if ( !cameraTable.ContainsKey(cam))
+                {
+                    cameraTable[cam] = CreatePairCamera(cam);
+                }
             }
         }
 
-        Camera GetPairCamera(Camera cam)
-        {
-            Camera ret;
-            if (!cameraTable.TryGetValue(cam, out ret))
-            {
-                ret = cameraTable[cam] = CreatePairCamera(cam);
-            }
+        #endregion
 
-            return ret;
-        }
 
         Camera CreatePairCamera(Camera cam)
         {
@@ -79,7 +75,26 @@ namespace PortalGateSystem
 
             c.targetTexture = tex;
 
+            virtualCameras.Add(c);
+
             return c;
+        }
+
+
+        void UpdatePairCamera(Camera cam, Camera virtualCam)
+        {
+            var camTrans = cam.transform;
+
+            var localPos = transform.InverseTransformPoint(camTrans.position);
+            var localRot = Quaternion.Inverse(transform.rotation) * camTrans.rotation;
+
+            var pairTrans = pair.transform;
+            var pos = pairTrans.TransformPoint(rotY * localPos);
+            var rot = pairTrans.rotation * rotY * localRot;
+
+            virtualCam.transform.SetPositionAndRotation(pos, rot);
+
+            material.mainTexture = virtualCam.targetTexture;
         }
     }
 }
