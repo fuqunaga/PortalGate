@@ -7,6 +7,12 @@ namespace PortalGateSystem
 {
     public class PortalGate : MonoBehaviour
     {
+        public static class ShaderParam
+        {
+            public const string MainCameraViewProj = "_MainCameraViewProj";
+        }
+
+
         public GameObject virtualCameraPrefab;
         public PortalGate pair;
 
@@ -32,17 +38,35 @@ namespace PortalGateSystem
         private void OnWillRenderObject()
         {
             var cam = Camera.current;
+            var virtualCam = cam.gameObject.GetComponent<VirtualCamera>();
+            var rootCam = cam;
+            RenderTexture tex;
+            
 
-            if ( cam.gameObject.GetComponent<VirtualCamera>() == null )
+
+            // main camera
+            if (virtualCam == null)
             {
                 VirtualCamera vc;
-                if ( !virtualCameraTable.TryGetValue(cam, out vc))
+                if (!virtualCameraTable.TryGetValue(cam, out vc))
                 {
                     vc = virtualCameraTable[cam] = CreateVirtualCamera(cam);
+                    return;
                 }
 
-                material.mainTexture = vc.targetTexture;
+                tex = vc.targetTexture;
             }
+            // virtual camera
+            else
+            {
+                rootCam = virtualCam.parentCamera;
+                tex = virtualCam.lastTex;
+            }
+
+            Matrix4x4 projGPU = GL.GetGPUProjectionMatrix(rootCam.projectionMatrix, true) * rootCam.worldToCameraMatrix;
+
+            material.mainTexture = tex;
+            material.SetMatrix(ShaderParam.MainCameraViewProj, projGPU);
         }
 
         #endregion

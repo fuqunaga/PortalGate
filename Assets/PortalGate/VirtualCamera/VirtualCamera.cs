@@ -10,7 +10,14 @@ namespace PortalGateSystem
         public PortalGate parentGate;
         public Camera parentCamera;
 
-        public RenderTexture targetTexture => (cam != null) ? cam.targetTexture : null;
+        bool currentTex0;
+        protected RenderTexture tex0;
+        protected RenderTexture tex1;
+
+
+        public RenderTexture targetTexture => currentTex0 ? tex0 : tex1;
+
+        public RenderTexture lastTex => currentTex0 ? tex1 : tex0;
 
         private void Start()
         {
@@ -24,9 +31,18 @@ namespace PortalGateSystem
                 ? new Vector2Int(baseTex.width, baseTex.height)
                 : new Vector2Int(Screen.width, Screen.height);
 
-            var tex = new RenderTexture(size.x, size.y, 24);
+            tex0 = new RenderTexture(size.x, size.y, 24);
+            tex1 = new RenderTexture(size.x, size.y, 24);
 
-            cam.targetTexture = tex;
+            cam.targetTexture = tex0;
+            currentTex0 = true;
+        }
+
+        private void Update()
+        {
+            // swap
+            cam.targetTexture = lastTex;
+            currentTex0 = !currentTex0;
         }
 
         private void LateUpdate()
@@ -41,6 +57,7 @@ namespace PortalGateSystem
             SetPairLocalToTransform(transform, pairGate, localPos, localRot);
 
             // TODO: pairGateが斜めってるとき正しくない
+            // pairGateの奥しか描画しない。とりあえずnearClipPlaneでなんとなく対処
             var pairGatePosOnCamera = transform.InverseTransformPoint(pairGate.transform.position);
             cam.nearClipPlane = Mathf.Max(0f, pairGatePosOnCamera.z - 1f);
         }
