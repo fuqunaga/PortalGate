@@ -50,26 +50,13 @@ namespace PortalGateSystem
             var parentGateTrans = parentGate.transform;
             var parentCamTrans = parentCamera.transform;
 
-            var localPos = parentGateTrans.InverseTransformPoint(parentCamTrans.position);
-            var localRot = Quaternion.Inverse(parentGateTrans.rotation) * parentCamTrans.rotation;
-
-            var pairGate = parentGate.pair;
-            SetPairLocalToTransform(transform, pairGate, localPos, localRot);
+            parentGate.PassTransform(transform, parentCamTrans.position, parentCamTrans.rotation);
 
             // TODO: pairGateが斜めってるとき正しくない
             // pairGateの奥しか描画しない。とりあえずnearClipPlaneでなんとなく対処
+            var pairGate = parentGate.pair;
             var pairGatePosOnCamera = transform.InverseTransformPoint(pairGate.transform.position);
             cam.nearClipPlane = Mathf.Max(0f, pairGatePosOnCamera.z - 1f);
-        }
-
-        void SetPairLocalToTransform(Transform trans, PortalGate pairGate, Vector3 localPos, Quaternion localRot)
-        {
-            var pairGateTrans = pairGate.transform;
-            var gateRot = pairGate.gateRot;
-            var pos = pairGateTrans.TransformPoint(gateRot * localPos);
-            var rot = pairGateTrans.rotation * gateRot * localRot;
-
-            trans.SetPositionAndRotation(pos, rot);
         }
     }
 }

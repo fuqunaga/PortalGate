@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -83,6 +84,26 @@ namespace PortalGateSystem
             vc.parentGate = this;
 
             return vc;
+        }
+
+
+        public void PassTransform(Transform trans, Vector3 worldPos, Quaternion worldRot)
+        {
+            var localPos = transform.InverseTransformPoint(worldPos);
+            var localRot = Quaternion.Inverse(transform.rotation) * worldRot;
+
+            var pairGateTrans = pair.transform;
+            var gateRot = pair.gateRot;
+            var pos = pairGateTrans.TransformPoint(gateRot * localPos);
+            var rot = pairGateTrans.rotation * gateRot * localRot;
+
+            trans.SetPositionAndRotation(pos, rot);
+        }
+
+        public void PassRigidbody(Rigidbody rigidbody)
+        {
+            var rot = pair.transform.rotation * pair.gateRot * Quaternion.Inverse(transform.rotation);
+            rigidbody.velocity = rot * rigidbody.velocity;
         }
     }
 }
