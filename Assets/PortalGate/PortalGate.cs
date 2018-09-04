@@ -17,9 +17,11 @@ namespace PortalGateSystem
         public GameObject virtualCameraPrefab;
         public PortalGate pair;
 
+        public int maxGeneration = 5;
+
         public Quaternion gateRot { get; } = Quaternion.Euler(0f, 180f, 0f);
 
-        Dictionary<Camera, VirtualCamera> virtualCameraTable = new Dictionary<Camera, VirtualCamera>();
+        Dictionary<Camera, VirtualCamera> pairVCTable = new Dictionary<Camera, VirtualCamera>();
 
         Material material;
 
@@ -39,29 +41,31 @@ namespace PortalGateSystem
         private void OnWillRenderObject()
         {
             var cam = Camera.current;
-            var virtualCam = cam.gameObject.GetComponent<VirtualCamera>();
+            var vc = cam.gameObject.GetComponent<VirtualCamera>();
+            var hasVC = vc != null;
             var rootCam = cam;
             RenderTexture tex;
-            
 
-
-            // main camera
-            if (virtualCam == null)
+            VirtualCamera pairVC;
+            if (!pairVCTable.TryGetValue(cam, out pairVC))
             {
-                VirtualCamera vc;
-                if (!virtualCameraTable.TryGetValue(cam, out vc))
+                if (!hasVC || vc.generation < maxGeneration)
                 {
-                    vc = virtualCameraTable[cam] = CreateVirtualCamera(cam);
+                    pairVC = pairVCTable[cam] = CreateVirtualCamera(cam, vc);
                     return;
                 }
-
-                tex = vc.targetTexture;
             }
-            // virtual camera
+
+
+            if (pairVC != null)
+            {
+                tex = pairVC.targetTexture;
+            }
+            // last generation
             else
             {
-                rootCam = virtualCam.parentCamera;
-                tex = virtualCam.lastTex;
+                rootCam = vc.rootCamera;
+                tex = vc.lastTex;
             }
 
             Matrix4x4 projGPU = GL.GetGPUProjectionMatrix(rootCam.projectionMatrix, true) * rootCam.worldToCameraMatrix;
@@ -73,15 +77,20 @@ namespace PortalGateSystem
         #endregion
 
 
-        VirtualCamera CreateVirtualCamera(Camera cam)
+        VirtualCamera CreateVirtualCamera(Camera parentCam, VirtualCamera parentVC)
         {
+            var rootCam = parentVC?.rootCamera ?? parentCam;
+            var generation = parentVC?.generation+1 ?? 1;
+
             var go = Instantiate(virtualCameraPrefab);
-            go.name = cam.name + "_virtual";
+            go.name = rootCam.name + "_virtual" + generation;
             go.transform.SetParent(transform);
 
             var vc = go.GetComponent<VirtualCamera>();
-            vc.parentCamera = cam;
+            vc.rootCamera = rootCam;
+            vc.parentCamera = parentCam;
             vc.parentGate = this;
+            vc.generation = generation;
 
             return vc;
         }

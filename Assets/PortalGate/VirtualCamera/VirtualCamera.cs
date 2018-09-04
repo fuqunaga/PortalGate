@@ -8,7 +8,10 @@ namespace PortalGateSystem
         public Camera cam;
 
         public PortalGate parentGate;
+        public Camera rootCamera;
         public Camera parentCamera;
+
+        public int generation;
 
         bool currentTex0;
         protected RenderTexture tex0;
@@ -23,7 +26,7 @@ namespace PortalGateSystem
         {
             cam = GetComponent<Camera>();
 
-            cam.CopyFrom(parentCamera);
+            cam.CopyFrom(rootCamera);
             cam.depth = parentCamera.depth - 1;
 
             var baseTex = parentCamera.targetTexture;
@@ -43,6 +46,8 @@ namespace PortalGateSystem
             // swap
             cam.targetTexture = lastTex;
             currentTex0 = !currentTex0;
+
+            if (parentCamera == null) Destroy(gameObject);
         }
 
         private void LateUpdate()
@@ -52,7 +57,23 @@ namespace PortalGateSystem
 
             parentGate.UpdateTransformOnPair(transform, parentCamTrans.position, parentCamTrans.rotation);
 
+            cam.enabled = IsPairGateVisible();
 
+            if (cam.enabled)
+            {
+                UpdateProjectionMantrix();
+            }
+        }
+
+        bool IsPairGateVisible()
+        {
+            var pairTrans = parentGate.pair.transform;
+            return (transform.InverseTransformPoint(pairTrans.position).z >= 0f) // gate is front of camera
+                && (Vector3.Dot(transform.forward, pairTrans.forward) <= 0f); // camera is back of gate
+        }
+
+        void UpdateProjectionMantrix()
+        {
             // pairGateの奥しか描画しない = nearClipPlane を pairGateと一致させる
             var pairGateTrans = parentGate.pair.transform;
             var clipPlane = CalcPlane(cam, pairGateTrans.position, -pairGateTrans.forward);
