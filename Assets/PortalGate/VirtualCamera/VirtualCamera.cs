@@ -50,13 +50,29 @@ namespace PortalGateSystem
             var parentGateTrans = parentGate.transform;
             var parentCamTrans = parentCamera.transform;
 
-            parentGate.PassTransform(transform, parentCamTrans.position, parentCamTrans.rotation);
+            parentGate.UpdateTransformOnPair(transform, parentCamTrans.position, parentCamTrans.rotation);
 
-            // TODO: pairGateが斜めってるとき正しくない
-            // pairGateの奥しか描画しない。とりあえずnearClipPlaneでなんとなく対処
-            var pairGate = parentGate.pair;
-            var pairGatePosOnCamera = transform.InverseTransformPoint(pairGate.transform.position);
-            cam.nearClipPlane = Mathf.Max(0f, pairGatePosOnCamera.z - 1f);
+
+            // pairGateの奥しか描画しない = nearClipPlane を pairGateと一致させる
+            var pairGateTrans = parentGate.pair.transform;
+            var clipPlane = CalcPlane(cam, pairGateTrans.position, -pairGateTrans.forward);
+            cam.ResetProjectionMatrix();
+            cam.projectionMatrix = cam.CalculateObliqueMatrix(clipPlane);
+        }
+
+        Vector4 CalcPlane(Camera cam, Vector3 pos, Vector3 normal)
+        {
+            var viewMat = cam.worldToCameraMatrix;
+
+            var normalOnView = viewMat.MultiplyVector(normal).normalized;
+            var posOnView = viewMat.MultiplyPoint(pos);
+
+            return new Vector4(
+                normalOnView.x,
+                normalOnView.y,
+                normalOnView.z,
+                -Vector3.Dot(normalOnView, posOnView)
+                );
         }
     }
 }

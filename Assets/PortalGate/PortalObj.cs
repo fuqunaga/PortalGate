@@ -24,11 +24,11 @@ namespace PortalGateSystem
                 // z >= 0f ならGate通過
                 if ( posOnGate.z >= 0f)
                 {
-                    gate.PassTransform(transform, transform.position, transform.rotation);
+                    gate.UpdateTransformOnPair(transform, transform.position, transform.rotation);
                     
                     if ( rigidbody_ != null)
                     {
-                        gate.PassRigidbody(rigidbody_);
+                        gate.UpdateRigidbodyOnPair(rigidbody_);
                     }
                 }
             }

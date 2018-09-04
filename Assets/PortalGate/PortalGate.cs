@@ -87,7 +87,7 @@ namespace PortalGateSystem
         }
 
 
-        public void PassTransform(Transform trans, Vector3 worldPos, Quaternion worldRot)
+        public void UpdateTransformOnPair(Transform trans, Vector3 worldPos, Quaternion worldRot)
         {
             var localPos = transform.InverseTransformPoint(worldPos);
             var localRot = Quaternion.Inverse(transform.rotation) * worldRot;
@@ -100,7 +100,7 @@ namespace PortalGateSystem
             trans.SetPositionAndRotation(pos, rot);
         }
 
-        public void PassRigidbody(Rigidbody rigidbody)
+        public void UpdateRigidbodyOnPair(Rigidbody rigidbody)
         {
             var rot = pair.transform.rotation * pair.gateRot * Quaternion.Inverse(transform.rotation);
             rigidbody.velocity = rot * rigidbody.velocity;
