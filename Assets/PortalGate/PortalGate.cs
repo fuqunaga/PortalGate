@@ -57,6 +57,7 @@ namespace PortalGateSystem
             }
 
 
+            var texScale = 1f;
             if (pairVC != null)
             {
                 tex = pairVC.targetTexture;
@@ -64,7 +65,7 @@ namespace PortalGateSystem
             // last generation
             else
             {
-                rootCam = vc.rootCamera;
+                rootCam = vc.parentCamera;
                 tex = vc.lastTex;
             }
 

@@ -32,7 +32,7 @@
 			{
 				v2f o;
 
-				float3 posWorld = mul(unity_ObjectToWorld, float4(v, 1.0)).xyz;
+				float3 posWorld = mul(unity_ObjectToWorld, float4(v, 1)).xyz;
 				float4 clipPos = mul(UNITY_MATRIX_VP, float4(posWorld, 1));
 				float4 clipPosOnMain = mul(_MainCameraViewProj, float4(posWorld, 1));
 

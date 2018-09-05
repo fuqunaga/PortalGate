@@ -46,14 +46,19 @@ namespace PortalGateSystem
             // swap
             cam.targetTexture = lastTex;
             currentTex0 = !currentTex0;
-
-            if (parentCamera == null) Destroy(gameObject);
         }
 
         private void LateUpdate()
         {
-            var parentGateTrans = parentGate.transform;
+            // PreviewCameraなどはこのタイミングでnullになっているようなのでチェック
+            if (parentCamera == null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             var parentCamTrans = parentCamera.transform;
+            var parentGateTrans = parentGate.transform;
 
             parentGate.UpdateTransformOnPair(transform, parentCamTrans.position, parentCamTrans.rotation);
 
