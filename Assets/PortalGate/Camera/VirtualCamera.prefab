@@ -92,6 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c86b6cd8a00225489e6383ae02e026d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  camera_: {fileID: 0}
   parentGate: {fileID: 0}
+  rootCamera: {fileID: 0}
   parentCamera: {fileID: 0}
+  generation: 0

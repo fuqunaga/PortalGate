@@ -1,11 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace PortalGateSystem
 {
     [RequireComponent(typeof(Camera))]
     public class VirtualCamera : MonoBehaviour
     {
-        public Camera cam;
+        public Camera camera_;
 
         public PortalGate parentGate;
         public Camera rootCamera;
@@ -24,10 +26,10 @@ namespace PortalGateSystem
 
         private void Start()
         {
-            cam = GetComponent<Camera>();
+            camera_ = GetComponent<Camera>();
 
-            cam.CopyFrom(rootCamera);
-            cam.depth = parentCamera.depth - 1;
+            camera_.CopyFrom(rootCamera);
+            camera_.depth = parentCamera.depth - 1;
 
             var baseTex = parentCamera.targetTexture;
             var size = (baseTex != null)
@@ -37,14 +39,14 @@ namespace PortalGateSystem
             tex0 = new RenderTexture(size.x, size.y, 24);
             tex1 = new RenderTexture(size.x, size.y, 24);
 
-            cam.targetTexture = tex0;
+            camera_.targetTexture = tex0;
             currentTex0 = true;
         }
 
         private void Update()
         {
             // swap
-            cam.targetTexture = lastTex;
+            camera_.targetTexture = lastTex;
             currentTex0 = !currentTex0;
         }
 
@@ -62,11 +64,11 @@ namespace PortalGateSystem
 
             parentGate.UpdateTransformOnPair(transform, parentCamTrans.position, parentCamTrans.rotation);
 
-            cam.enabled = IsPairGateVisible();
+            camera_.enabled = IsPairGateVisible();
 
-            if (cam.enabled)
+            if (camera_.enabled)
             {
-                UpdateProjectionMantrix();
+                UpdateCamera();
             }
         }
 
@@ -77,13 +79,22 @@ namespace PortalGateSystem
                 && (Vector3.Dot(transform.forward, pairTrans.forward) <= 0f); // camera is back of gate
         }
 
-        void UpdateProjectionMantrix()
+
+        void UpdateCamera()
         {
+            var pair = parentGate.pair;
+            var pairTrans = pair.transform;
+            var mesh = pair.GetComponent<MeshFilter>().sharedMesh;
+            var vtxList = mesh.vertices.Select(vtx => pairTrans.TransformPoint(vtx)).ToList();
+
+            TargetCameraUtility.Update(camera_, vtxList);
+
+            // Oblique
             // pairGateの奥しか描画しない = nearClipPlane を pairGateと一致させる
             var pairGateTrans = parentGate.pair.transform;
-            var clipPlane = CalcPlane(cam, pairGateTrans.position, -pairGateTrans.forward);
-            cam.ResetProjectionMatrix();
-            cam.projectionMatrix = cam.CalculateObliqueMatrix(clipPlane);
+            var clipPlane = CalcPlane(camera_, pairGateTrans.position, -pairGateTrans.forward);
+
+            camera_.projectionMatrix = camera_.CalculateObliqueMatrix(clipPlane);
         }
 
         Vector4 CalcPlane(Camera cam, Vector3 pos, Vector3 normal)

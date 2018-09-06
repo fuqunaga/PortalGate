@@ -57,7 +57,6 @@ namespace PortalGateSystem
             }
 
 
-            var texScale = 1f;
             if (pairVC != null)
             {
                 tex = pairVC.targetTexture;
