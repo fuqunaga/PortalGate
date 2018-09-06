@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace PortalGateSystem
@@ -42,20 +39,19 @@ namespace PortalGateSystem
         {
             var cam = Camera.current;
             var vc = cam.gameObject.GetComponent<VirtualCamera>();
-            var hasVC = vc != null;
-            var rootCam = cam;
-            RenderTexture tex;
 
             VirtualCamera pairVC;
             if (!pairVCTable.TryGetValue(cam, out pairVC))
             {
-                if (!hasVC || vc.generation < maxGeneration)
+                if ((vc == null) || vc.generation < maxGeneration)
                 {
                     pairVC = pairVCTable[cam] = CreateVirtualCamera(cam, vc);
                     return;
                 }
             }
 
+
+            RenderTexture tex;
 
             if (pairVC != null)
             {
@@ -64,11 +60,13 @@ namespace PortalGateSystem
             // last generation
             else
             {
-                rootCam = vc.parentCamera;
+                cam = vc.parentCamera;
                 tex = vc.lastTex;
             }
 
-            Matrix4x4 projGPU = GL.GetGPUProjectionMatrix(rootCam.projectionMatrix, true) * rootCam.worldToCameraMatrix;
+            var rootCam = vc?.rootCamera ?? cam;
+            Matrix4x4 projGPU = GL.GetGPUProjectionMatrix(rootCam.projectionMatrix, true) * cam.worldToCameraMatrix;
+
 
             material.mainTexture = tex;
             material.SetMatrix(ShaderParam.MainCameraViewProj, projGPU);

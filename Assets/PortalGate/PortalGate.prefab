@@ -67,7 +67,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1903553006796780}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.14, z: 10.19}
+  m_LocalPosition: {x: 0, y: 2.14, z: 9.29}
   m_LocalScale: {x: 2, y: 4, z: 1}
   m_Children:
   - {fileID: 4162333926617392}
@@ -184,3 +184,4 @@ MonoBehaviour:
   virtualCameraPrefab: {fileID: 1213528047654480, guid: 364f25b197af77b4e84f77fd30b6e4b7,
     type: 2}
   pair: {fileID: 0}
+  maxGeneration: 2
