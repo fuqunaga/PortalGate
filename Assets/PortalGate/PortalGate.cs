@@ -21,6 +21,8 @@ namespace PortalGateSystem
         Dictionary<Camera, VirtualCamera> pairVCTable = new Dictionary<Camera, VirtualCamera>();
 
         Material material;
+        Collider coll;
+
 
         #region Unity
 
@@ -28,6 +30,8 @@ namespace PortalGateSystem
         {
             var renderer = GetComponent<Renderer>();
             material = renderer.material;
+
+            coll = GetComponent<Collider>();
         }
 
         private void OnDestroy()
@@ -91,6 +95,20 @@ namespace PortalGateSystem
             vc.generation = generation;
 
             return vc;
+        }
+
+        public bool IsVisible(Camera camera)
+        {
+            var ret = false;
+
+            var dir = camera.transform.InverseTransformDirection(transform.forward);
+            if (dir.z > 0f)
+            {
+                var planes = GeometryUtility.CalculateFrustumPlanes(camera);
+                ret = GeometryUtility.TestPlanesAABB(planes, coll.bounds);
+            }
+
+            return ret;
         }
 
 

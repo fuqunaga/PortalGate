@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace PortalGateSystem
 {
-    public class FillTexture : MonoBehaviour
+    public class ViewVirtucalCameraTexture : MonoBehaviour
     {
         public VirtualCamera virtualCamera;
 

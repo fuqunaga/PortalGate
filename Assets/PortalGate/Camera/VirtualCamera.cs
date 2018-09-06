@@ -31,23 +31,15 @@ namespace PortalGateSystem
             camera_.CopyFrom(rootCamera);
             camera_.depth = parentCamera.depth - 1;
 
-            var baseTex = parentCamera.targetTexture;
-            var size = (baseTex != null)
-                ? new Vector2Int(baseTex.width, baseTex.height)
-                : new Vector2Int(Screen.width, Screen.height);
-
-            tex0 = new RenderTexture(size.x, size.y, 24);
-            tex1 = new RenderTexture(size.x, size.y, 24);
-
             camera_.targetTexture = tex0;
             currentTex0 = true;
         }
 
         private void Update()
         {
-            // swap
-            camera_.targetTexture = lastTex;
-            currentTex0 = !currentTex0;
+            CheckTexSize();
+
+            SwapTex();
         }
 
         private void LateUpdate()
@@ -59,24 +51,42 @@ namespace PortalGateSystem
                 return;
             }
 
-            var parentCamTrans = parentCamera.transform;
-            var parentGateTrans = parentGate.transform;
-
-            parentGate.UpdateTransformOnPair(transform, parentCamTrans.position, parentCamTrans.rotation);
-
-            camera_.enabled = IsPairGateVisible();
-
+            camera_.enabled = parentGate.IsVisible(parentCamera);
             if (camera_.enabled)
             {
+                var parentCamTrans = parentCamera.transform;
+                var parentGateTrans = parentGate.transform;
+
+                parentGate.UpdateTransformOnPair(transform, parentCamTrans.position, parentCamTrans.rotation);
+
+
                 UpdateCamera();
             }
         }
 
-        bool IsPairGateVisible()
+
+        void CheckTexSize()
         {
-            var pairTrans = parentGate.pair.transform;
-            return (transform.InverseTransformPoint(pairTrans.position).z >= 0f) // gate is front of camera
-                && (Vector3.Dot(transform.forward, pairTrans.forward) <= 0f); // camera is back of gate
+            var baseTex = rootCamera.targetTexture;
+            var size = (baseTex != null)
+                ? new Vector2Int(baseTex.width, baseTex.height)
+                : new Vector2Int(Screen.width, Screen.height);
+
+            if ( (tex0 == null) || tex0.width != size.x || tex0.height != size.y )
+            {
+                if (tex0 != null) tex0.Release();
+                if (tex1 != null) tex1.Release();
+
+                tex0 = new RenderTexture(size.x, size.y, 24);
+                tex1 = new RenderTexture(size.x, size.y, 24);
+            }
+        }
+
+        void SwapTex()
+        {
+            // swap
+            camera_.targetTexture = lastTex;
+            currentTex0 = !currentTex0;
         }
 
 

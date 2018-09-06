@@ -11363,7 +11363,7 @@ Prefab:
     - target: {fileID: 114138803053559872, guid: a0d43e0adfd98e840a821e53cee6e1a4,
         type: 2}
       propertyPath: maxGeneration
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a0d43e0adfd98e840a821e53cee6e1a4, type: 2}
@@ -53325,7 +53325,7 @@ Prefab:
     - target: {fileID: 114138803053559872, guid: a0d43e0adfd98e840a821e53cee6e1a4,
         type: 2}
       propertyPath: maxGeneration
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4242038717027100, guid: a0d43e0adfd98e840a821e53cee6e1a4, type: 2}
       propertyPath: m_LocalEulerAnglesHint.y
