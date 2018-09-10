@@ -100,7 +100,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &114643878861056534
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -118,7 +118,7 @@ SphereCollider:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1276197182709104}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 9071260984eaf8a47b4dd31d3169cc8a, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
