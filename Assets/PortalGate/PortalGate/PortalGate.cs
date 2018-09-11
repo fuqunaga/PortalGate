@@ -12,9 +12,11 @@ namespace PortalGateSystem
 
 
         public GameObject virtualCameraPrefab;
+        public int maxGeneration = 5;
+
         public PortalGate pair;
 
-        public int maxGeneration = 5;
+
 
         public Quaternion gateRot { get; } = Quaternion.Euler(0f, 180f, 0f);
 
@@ -28,8 +30,7 @@ namespace PortalGateSystem
 
         private void Start()
         {
-            var renderer = GetComponent<Renderer>();
-            material = renderer.material;
+            material = GetComponent<Renderer>().material;
 
             coll = GetComponent<Collider>();
         }
@@ -41,6 +42,8 @@ namespace PortalGateSystem
 
         private void OnWillRenderObject()
         {
+            if (pair == null) return;
+
             var cam = Camera.current;
             var vc = cam.gameObject.GetComponent<VirtualCamera>();
 
