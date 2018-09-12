@@ -14,6 +14,8 @@ namespace PortalGateSystem
         public GameObject gatePrefab;
         List<PortalGate> gatePair = new List<PortalGate>(2) { null, null };
 
+        public float gatePosOffset = 0.02f;
+
 
         private void Update()
         {
@@ -30,7 +32,7 @@ namespace PortalGateSystem
         void Shot(int idx)
         {
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit, float.MaxValue, LayerMask.GetMask(new[] { "Stage" })))
+            if (Physics.Raycast(transform.position, transform.forward, out hit, float.MaxValue, LayerMask.GetMask(new[] { "StageColl" })))
             {
                 var gate = gatePair[idx];
                 if (gate == null)
@@ -43,9 +45,11 @@ namespace PortalGateSystem
                     if (pair != null) pair.pair = gate;
                 }
 
+                gate.hitColl = hit.collider;
+
                 var trans = gate.transform;
                 var normal = hit.normal;
-                trans.position = hit.point + normal * 0.01f;
+                trans.position = hit.point + normal * gatePosOffset;
                 trans.rotation = Quaternion.LookRotation(-normal, transform.up);
             }
         }

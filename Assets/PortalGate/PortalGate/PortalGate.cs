@@ -15,7 +15,7 @@ namespace PortalGateSystem
         public int maxGeneration = 5;
 
         public PortalGate pair;
-
+        public Collider hitColl;
 
 
         public Quaternion gateRot { get; } = Quaternion.Euler(0f, 180f, 0f);

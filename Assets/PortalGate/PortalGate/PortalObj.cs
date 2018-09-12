@@ -1,17 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
+using UnityStandardAssets.Characters.FirstPerson;
 
 namespace PortalGateSystem
 {
+    [RequireComponent(typeof(Collider))]
     public class PortalObj : MonoBehaviour
     {
         protected Rigidbody rigidbody_;
+        protected Collider collider_;
+        protected FirstPersonController fpController;
 
         private void Start()
         {
             rigidbody_ = GetComponent<Rigidbody>();
+            collider_ = GetComponent<Collider>();
+            fpController = GetComponent<FirstPersonController>();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            var gate = other.GetComponent<PortalGate>();
+            if (gate != null)
+            {
+                Physics.IgnoreCollision(gate.hitColl, collider_, true);
+            }
         }
 
         private void OnTriggerExit(Collider other)
@@ -30,7 +44,14 @@ namespace PortalGateSystem
                     {
                         gate.UpdateRigidbodyOnPair(rigidbody_);
                     }
+
+                    if ( fpController != null)
+                    {
+                        fpController.InitMouseLook();
+                    }
                 }
+
+                Physics.IgnoreCollision(gate.hitColl, collider_, false);
             }
         }
     }
