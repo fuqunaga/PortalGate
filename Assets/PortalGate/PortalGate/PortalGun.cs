@@ -41,8 +41,8 @@ namespace PortalGateSystem
                     gate = gatePair[idx] = go.GetComponent<PortalGate>();
 
                     var pair = gatePair[(idx + 1) % 2];
-                    gate.pair = pair;
-                    if (pair != null) pair.pair = gate;
+                    gate.SetPair(pair);
+                    if (pair != null) pair.SetPair(gate);
                 }
 
                 gate.hitColl = hit.collider;
@@ -51,6 +51,8 @@ namespace PortalGateSystem
                 var normal = hit.normal;
                 trans.position = hit.point + normal * gatePosOffset;
                 trans.rotation = Quaternion.LookRotation(-normal, transform.up);
+
+                gate.Open();
             }
         }
     }

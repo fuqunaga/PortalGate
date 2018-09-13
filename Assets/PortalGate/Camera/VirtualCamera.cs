@@ -7,6 +7,8 @@ namespace PortalGateSystem
     [RequireComponent(typeof(Camera))]
     public class VirtualCamera : MonoBehaviour
     {
+        const string PlayerLayerName = "Player";
+
         public Camera camera_;
 
         public PortalGate parentGate;
@@ -29,6 +31,7 @@ namespace PortalGateSystem
             camera_ = GetComponent<Camera>();
 
             camera_.CopyFrom(rootCamera);
+            camera_.cullingMask |= LayerMask.GetMask(new[] { PlayerLayerName });
             camera_.depth = parentCamera.depth - 1;
 
             camera_.targetTexture = tex0;

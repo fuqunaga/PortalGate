@@ -110,5 +110,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   virtualCameraPrefab: {fileID: 1213528047654480, guid: 364f25b197af77b4e84f77fd30b6e4b7,
     type: 2}
-  maxGeneration: 2
+  maxGeneration: 5
+  openTime: 0.5
   pair: {fileID: 0}
+  hitColl: {fileID: 0}

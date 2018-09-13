@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PortalGateSystem
@@ -8,13 +9,17 @@ namespace PortalGateSystem
         public static class ShaderParam
         {
             public const string MainCameraViewProj = "_MainCameraViewProj";
+            public const string OpenRate = "_OpenRate";
+            public const string ConnectRate = "_ConnectRate";
         }
 
 
         public GameObject virtualCameraPrefab;
         public int maxGeneration = 5;
+        public float openTime = 0.5f;
+        public float connectTime = 0.5f;
 
-        public PortalGate pair;
+        public PortalGate pair { get; protected set; }
         public Collider hitColl;
 
 
@@ -28,11 +33,12 @@ namespace PortalGateSystem
 
         #region Unity
 
-        private void Start()
+        private void Awake()
         {
             material = GetComponent<Renderer>().material;
-
             coll = GetComponent<Collider>();
+
+            material.SetFloat(ShaderParam.ConnectRate, 0f);
         }
 
         private void OnDestroy()
@@ -81,11 +87,25 @@ namespace PortalGateSystem
 
         #endregion
 
+        public void Open()
+        {
+            StartCoroutine(UpdateRateCoroutine(ShaderParam.OpenRate, openTime));
+        }
+
+        public void SetPair(PortalGate gate)
+        {
+            if (pair == null && gate != null)
+            {
+                StartCoroutine(UpdateRateCoroutine(ShaderParam.ConnectRate, connectTime));
+            }
+
+            pair = gate;
+        }
 
         VirtualCamera CreateVirtualCamera(Camera parentCam, VirtualCamera parentVC)
         {
             var rootCam = parentVC?.rootCamera ?? parentCam;
-            var generation = parentVC?.generation+1 ?? 1;
+            var generation = parentVC?.generation + 1 ?? 1;
 
             var go = Instantiate(virtualCameraPrefab);
             go.name = rootCam.name + "_virtual" + generation;
@@ -132,6 +152,19 @@ namespace PortalGateSystem
         {
             var rot = pair.transform.rotation * pair.gateRot * Quaternion.Inverse(transform.rotation);
             rigidbody.velocity = rot * rigidbody.velocity;
+        }
+
+
+        IEnumerator UpdateRateCoroutine(string param, float time)
+        {
+            var startTime = Time.time;
+            var rate = 0f;
+            while (rate < 1f)
+            {
+                rate = Mathf.Min(1f, (Time.time - startTime) / time);
+                material.SetFloat(param, rate);
+                yield return null;
+            }
         }
     }
 }
