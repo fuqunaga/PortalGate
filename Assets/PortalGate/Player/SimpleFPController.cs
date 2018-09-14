@@ -22,6 +22,7 @@ namespace PortalGateSystem
         [SerializeField] private MouseLook m_MouseLook;
         [SerializeField] private bool m_UseFovKick;
         [SerializeField] private FOVKick m_FovKick = new FOVKick();
+        [SerializeField] private float modifyUPAngleSpeed = 100f;
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -48,6 +49,7 @@ namespace PortalGateSystem
         private void Update()
         {
             RotateView();
+            RotateUp();
 
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
@@ -144,6 +146,18 @@ namespace PortalGateSystem
         private void RotateView()
         {
             m_MouseLook.LookRotation (transform, m_Camera.transform);
+        }
+
+        void RotateUp()
+        {
+            var currentUp = transform.up;
+            var axis = Vector3.Cross(currentUp, Vector3.up);
+            if (axis.magnitude > 0.01f)
+            {
+                var rot = Quaternion.AngleAxis(Time.deltaTime * modifyUPAngleSpeed, axis);
+                transform.rotation = rot * transform.rotation;
+                InitMouseLook();
+            }
         }
 
 
