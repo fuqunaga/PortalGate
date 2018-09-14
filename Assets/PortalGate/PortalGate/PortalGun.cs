@@ -41,8 +41,11 @@ namespace PortalGateSystem
                     gate = gatePair[idx] = go.GetComponent<PortalGate>();
 
                     var pair = gatePair[(idx + 1) % 2];
-                    gate.SetPair(pair);
-                    if (pair != null) pair.SetPair(gate);
+                    if (pair != null)
+                    {
+                        gate.SetPair(pair);
+                        pair.SetPair(gate);
+                    }
                 }
 
                 gate.hitColl = hit.collider;

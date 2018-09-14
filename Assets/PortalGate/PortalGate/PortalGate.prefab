@@ -112,5 +112,5 @@ MonoBehaviour:
     type: 2}
   maxGeneration: 5
   openTime: 0.5
-  pair: {fileID: 0}
+  connectTime: 0.5
   hitColl: {fileID: 0}

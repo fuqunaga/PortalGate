@@ -117,6 +117,8 @@ namespace PortalGateSystem
             vc.parentGate = this;
             vc.generation = generation;
 
+            vc.Init();
+
             return vc;
         }
 

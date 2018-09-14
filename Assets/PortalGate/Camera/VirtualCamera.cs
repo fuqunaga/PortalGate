@@ -26,10 +26,13 @@ namespace PortalGateSystem
 
         public RenderTexture lastTex => currentTex0 ? tex1 : tex0;
 
-        private void Start()
+        private void Awake()
         {
             camera_ = GetComponent<Camera>();
+        }
 
+        public void Init()
+        {
             camera_.CopyFrom(rootCamera);
             camera_.cullingMask |= LayerMask.GetMask(new[] { PlayerLayerName });
             camera_.depth = parentCamera.depth - 1;
@@ -75,7 +78,7 @@ namespace PortalGateSystem
                 ? new Vector2Int(baseTex.width, baseTex.height)
                 : new Vector2Int(Screen.width, Screen.height);
 
-            if ( (tex0 == null) || tex0.width != size.x || tex0.height != size.y )
+            if ((tex0 == null) || tex0.width != size.x || tex0.height != size.y)
             {
                 if (tex0 != null) tex0.Release();
                 if (tex1 != null) tex1.Release();
