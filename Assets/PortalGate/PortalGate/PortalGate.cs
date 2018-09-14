@@ -87,6 +87,7 @@ namespace PortalGateSystem
 
         #endregion
 
+
         public void Open()
         {
             StartCoroutine(UpdateRateCoroutine(ShaderParam.OpenRate, openTime));
@@ -136,6 +137,11 @@ namespace PortalGateSystem
             return ret;
         }
 
+
+        public void UpdateTransformOnPair(Transform trans)
+        {
+            UpdateTransformOnPair(trans, trans.position, trans.rotation);
+        }
 
         public void UpdateTransformOnPair(Transform trans, Vector3 worldPos, Quaternion worldRot)
         {
