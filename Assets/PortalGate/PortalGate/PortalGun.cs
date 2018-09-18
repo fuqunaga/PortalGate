@@ -53,7 +53,7 @@ namespace PortalGateSystem
                 var trans = gate.transform;
                 var normal = hit.normal;
                 trans.position = hit.point + normal * gatePosOffset;
-                trans.rotation = Quaternion.LookRotation(-normal, transform.up);
+                trans.rotation = Quaternion.LookRotation(-normal, normal.y >= 0f ? transform.up :transform.forward);
 
                 gate.Open();
             }

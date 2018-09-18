@@ -38,10 +38,10 @@ namespace PortalGateSystem
             }
         }
 
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerStay(Collider other)
         {
             var gate = other.GetComponent<PortalGate>();
-            if (gate != null)
+            if ((gate != null) && !touchingGates.Contains(gate) && (gate.pair != null))
             {
                 touchingGates.Add(gate);
                 Physics.IgnoreCollision(gate.hitColl, collider_, true);

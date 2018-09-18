@@ -15,6 +15,7 @@ namespace PortalGateSystem
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
+        [SerializeField] private float m_SpeedMax = 5f;
         [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
         [SerializeField] private float m_JumpSpeed;
         [SerializeField] private float m_StickToGroundForce;
@@ -104,6 +105,8 @@ namespace PortalGateSystem
             {
                 m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
             }
+
+            m_MoveDir = Vector3.ClampMagnitude(m_MoveDir, m_SpeedMax);
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
             m_MouseLook.UpdateCursorLock();
@@ -154,7 +157,9 @@ namespace PortalGateSystem
             var axis = Vector3.Cross(currentUp, Vector3.up);
             if (axis.magnitude > 0.01f)
             {
-                var rot = Quaternion.AngleAxis(Time.deltaTime * modifyUPAngleSpeed, axis);
+                var angleMax = Mathf.Acos(currentUp.y) * Mathf.Rad2Deg;
+                var angle = Mathf.Min(angleMax, Time.deltaTime * modifyUPAngleSpeed);
+                var rot = Quaternion.AngleAxis(angle, axis);
                 transform.rotation = rot * transform.rotation;
                 InitMouseLook();
             }
