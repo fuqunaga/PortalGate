@@ -33,7 +33,11 @@ namespace PortalGateSystem
 
         public void Init()
         {
-            camera_.CopyFrom(rootCamera);
+            //camera_.CopyFrom(rootCamera);
+            camera_.aspect = rootCamera.aspect;
+            camera_.fieldOfView = rootCamera.fieldOfView;
+            camera_.nearClipPlane = rootCamera.nearClipPlane;
+            camera_.farClipPlane = rootCamera.farClipPlane;
             camera_.cullingMask |= LayerMask.GetMask(new[] { PlayerLayerName });
             camera_.depth = parentCamera.depth - 1;
 

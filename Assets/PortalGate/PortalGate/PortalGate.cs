@@ -127,11 +127,14 @@ namespace PortalGateSystem
         {
             var ret = false;
 
-            var dir = camera.transform.InverseTransformDirection(transform.forward);
-            if (dir.z > 0f)
+            var camToGateDir = (transform.position - camera.transform.position).normalized;
+            var dot = Vector3.Dot(camToGateDir, transform.forward);
+            if (dot > 0f)
             {
                 var planes = GeometryUtility.CalculateFrustumPlanes(camera);
                 ret = GeometryUtility.TestPlanesAABB(planes, coll.bounds);
+
+                Debug.DrawLine(transform.position, camera.transform.position);
             }
 
             return ret;
