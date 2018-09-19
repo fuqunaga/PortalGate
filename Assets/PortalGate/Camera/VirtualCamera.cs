@@ -33,7 +33,6 @@ namespace PortalGateSystem
 
         public void Init()
         {
-            //camera_.CopyFrom(rootCamera);
             camera_.aspect = rootCamera.aspect;
             camera_.fieldOfView = rootCamera.fieldOfView;
             camera_.nearClipPlane = rootCamera.nearClipPlane;
