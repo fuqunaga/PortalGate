@@ -28,11 +28,13 @@ namespace PortalGateSystem
         private Camera m_Camera;
         private bool m_Jump;
         private Vector2 m_Input;
-        private Vector3 m_MoveDir = Vector3.zero;
+        public Vector3 m_MoveDir = Vector3.zero;
         private CharacterController m_CharacterController;
         private CollisionFlags m_CollisionFlags;
         private bool m_PreviouslyGrounded;
         private bool m_Jumping;
+
+        private Rigidbody rigidbody_;
 
         // Use this for initialization
         private void Start()
@@ -41,6 +43,8 @@ namespace PortalGateSystem
             m_Camera = Camera.main;
             m_FovKick.Setup(m_Camera);
             m_Jumping = false;
+
+            rigidbody_ = GetComponent<Rigidbody>();
 
 			m_MouseLook.Init(transform , m_Camera.transform);
         }
@@ -103,7 +107,11 @@ namespace PortalGateSystem
             }
             else
             {
-                m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+                var useGravity = (rigidbody_ == null) || rigidbody_.useGravity;
+                if (useGravity)
+                {
+                    m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
+                }
             }
 
             m_MoveDir = Vector3.ClampMagnitude(m_MoveDir, m_SpeedMax);
@@ -154,13 +162,14 @@ namespace PortalGateSystem
         void RotateUp()
         {
             var currentUp = transform.up;
-            var axis = Vector3.Cross(currentUp, Vector3.up);
+            var axis = (currentUp.y < -0.9f) ? transform.right : Vector3.Cross(currentUp, Vector3.up);
             if (axis.magnitude > 0.01f)
             {
                 var angleMax = Mathf.Acos(currentUp.y) * Mathf.Rad2Deg;
                 var angle = Mathf.Min(angleMax, Time.deltaTime * modifyUPAngleSpeed);
                 var rot = Quaternion.AngleAxis(angle, axis);
                 transform.rotation = rot * transform.rotation;
+
                 InitMouseLook();
             }
         }

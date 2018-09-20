@@ -159,10 +159,10 @@ namespace PortalGateSystem
             trans.SetPositionAndRotation(pos, rot);
         }
 
-        public void UpdateRigidbodyOnPair(Rigidbody rigidbody)
+        public Vector3 UpdateDirOnPair(Vector3 dir)
         {
             var rot = pair.transform.rotation * pair.gateRot * Quaternion.Inverse(transform.rotation);
-            rigidbody.velocity = rot * rigidbody.velocity;
+            return rot * dir;
         }
 
 

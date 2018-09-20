@@ -6,8 +6,8 @@ PhysicMaterial:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: Sphere
-  dynamicFriction: 0.6
-  staticFriction: 0.6
-  bounciness: 0.2
+  dynamicFriction: 0.1
+  staticFriction: 0.1
+  bounciness: 0.9
   frictionCombine: 0
   bounceCombine: 0

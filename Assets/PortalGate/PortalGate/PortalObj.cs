@@ -9,11 +9,14 @@ namespace PortalGateSystem
     public class PortalObj : MonoBehaviour
     {
         public Transform center;
+        public float ignoreGravityTime = 0.1f;
         protected Rigidbody rigidbody_;
         protected Collider collider_;
         protected SimpleFPController fpController;
 
         protected HashSet<PortalGate> touchingGates = new HashSet<PortalGate>();
+
+        protected float ignoreGravityStartTime;
 
         private void Start()
         {
@@ -35,6 +38,14 @@ namespace PortalGateSystem
             if (passedGate != null)
             {
                 PassGate(passedGate);
+            }
+
+            if ((rigidbody_ != null) && !rigidbody_.useGravity)
+            {
+                if ((Time.time - ignoreGravityStartTime)  > ignoreGravityTime)
+                {
+                    rigidbody_.useGravity = true;
+                }
             }
         }
 
@@ -65,11 +76,14 @@ namespace PortalGateSystem
 
             if (rigidbody_ != null)
             {
-                gate.UpdateRigidbodyOnPair(rigidbody_);
+                rigidbody_.velocity = gate.UpdateDirOnPair(rigidbody_.velocity);
+                rigidbody_.useGravity = false;
+                ignoreGravityStartTime = Time.time;
             }
 
             if (fpController != null)
             {
+                fpController.m_MoveDir = gate.UpdateDirOnPair(fpController.m_MoveDir);
                 fpController.InitMouseLook();
             }
 

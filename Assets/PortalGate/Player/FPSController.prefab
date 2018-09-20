@@ -12016,6 +12016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   center: {fileID: 4351143497415624}
+  ignoreGravityTime: 0
 --- !u!114 &114237305770709712
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -12045,9 +12046,10 @@ MonoBehaviour:
   m_IsWalking: 1
   m_WalkSpeed: 10
   m_RunSpeed: 20
+  m_SpeedMax: 30
   m_RunstepLenghten: 0.7
   m_JumpSpeed: 10
-  m_StickToGroundForce: 10
+  m_StickToGroundForce: 1
   m_GravityMultiplier: 2
   m_MouseLook:
     XSensitivity: 2
@@ -12090,6 +12092,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   modifyUPAngleSpeed: 200
+  m_MoveDir: {x: 0, y: 0, z: 0}
 --- !u!124 &124890199995947180
 Behaviour:
   m_ObjectHideFlags: 1
