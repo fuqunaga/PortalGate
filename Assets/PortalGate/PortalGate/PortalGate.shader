@@ -5,6 +5,8 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		_OpenRate("OpenRate", Range(0,1)) = 1
 		_ConnectRate("ConnectRate", Range(0,1)) = 1
+		_FrameColor0("FrameColor0", Color) = (1,0,0)
+		_FrameColor1("FrameColor1", Color) = (0,0,1)
 	}
 	SubShader
 	{
@@ -35,6 +37,9 @@
 
 			float _OpenRate;
 			float _ConnectRate;
+
+			float3 _FrameColor0;
+			float3 _FrameColor1;
 
 			struct v2f
 			{
@@ -73,8 +78,6 @@
 				);
 				grabUV.xy += grabOffset * 0.3 * insideRate;
 				float4 bgColor = tex2Dproj(_BackgroundTexture, grabUV);
-				//col.xyz = lerp(tex2Dproj(_BackgroundTexture, grabUV).xyz, col.xyz, _ConnectRate);
-				//col.xyz = float3(grabOffset.xy, 1);
 
 				// portal other side
 				float2 sUV = In.sposOnMain.xy / In.sposOnMain.w;
@@ -86,9 +89,8 @@
 				// frame
 				float frame = smoothstep(0, 0.1, insideRate);
 				float frameColorRate = 1 - abs(frame - 0.5) * 2;
-				float3 frameColor0 = float3(1,0.7,0.4);
-				float3 frameColor1 = float3(0.7,1,0.5);
-				float3 frameColor = lerp(frameColor0, frameColor1, saturate(grabOffset.x + grabOffset.y));
+				float mixRate = saturate(grabOffset.x + grabOffset.y);
+				float3 frameColor = lerp(_FrameColor0, _FrameColor1, mixRate);
 				col.xyz = lerp(col.xyz, frameColor, frameColorRate);
 
 				col.a = frame;

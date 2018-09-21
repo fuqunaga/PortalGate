@@ -86,8 +86,6 @@ namespace PortalGateSystem
                 fpController.m_MoveDir = gate.UpdateDirOnPair(fpController.m_MoveDir);
                 fpController.InitMouseLook();
             }
-
-            Physics.IgnoreCollision(gate.pair.hitColl, collider_);
         }
     }
 }

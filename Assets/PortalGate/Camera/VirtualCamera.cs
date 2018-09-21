@@ -66,7 +66,11 @@ namespace PortalGateSystem
                 var parentCamTrans = parentCamera.transform;
                 var parentGateTrans = parentGate.transform;
 
-                parentGate.UpdateTransformOnPair(transform, parentCamTrans.position, parentCamTrans.rotation);
+                parentGate.UpdateTransformOnPair(
+                    transform, 
+                    parentCamTrans.position, 
+                    parentCamTrans.rotation
+                    );
 
 
                 UpdateCamera();

@@ -35981,6 +35981,86 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_0.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_0.g
+      value: 0.057513833
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_0.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_0.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_1.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_1.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_1.g
+      value: 0.64814043
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor0_1.b
+      value: 0.06300002
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_0.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_0.r
+      value: 0.2235294
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_0.g
+      value: 0.43624657
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_0.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_1.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_1.g
+      value: 0.72599363
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_1.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114140087824803124, guid: 0e5e5255da8002042b1450b87ad68d9c,
+        type: 2}
+      propertyPath: gateColor1_1.a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e5e5255da8002042b1450b87ad68d9c, type: 2}
   m_IsPrefabAsset: 0

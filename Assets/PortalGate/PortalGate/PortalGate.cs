@@ -11,6 +11,8 @@ namespace PortalGateSystem
             public const string MainCameraViewProj = "_MainCameraViewProj";
             public const string OpenRate = "_OpenRate";
             public const string ConnectRate = "_ConnectRate";
+            public const string FrameColor0 = "_FrameColor0";
+            public const string FrameColor1 = "_FrameColor1";
         }
 
 
@@ -24,6 +26,9 @@ namespace PortalGateSystem
 
 
         public Quaternion gateRot { get; } = Quaternion.Euler(0f, 180f, 0f);
+
+        public Color frameColor0;
+        public Color frameColor1;
 
         Dictionary<Camera, VirtualCamera> pairVCTable = new Dictionary<Camera, VirtualCamera>();
 
@@ -39,6 +44,12 @@ namespace PortalGateSystem
             coll = GetComponent<Collider>();
 
             material.SetFloat(ShaderParam.ConnectRate, 0f);
+        }
+
+        private void Start()
+        {
+            material.SetColor(ShaderParam.FrameColor0, frameColor0);
+            material.SetColor(ShaderParam.FrameColor1, frameColor1);
         }
 
         private void OnDestroy()
@@ -127,14 +138,15 @@ namespace PortalGateSystem
         {
             var ret = false;
 
-            var camToGateDir = (transform.position - camera.transform.position).normalized;
+            var pos = transform.position;
+            var camPos = camera.transform.position;
+
+            var camToGateDir = (pos - camPos).normalized;
             var dot = Vector3.Dot(camToGateDir, transform.forward);
             if (dot > 0f)
             {
                 var planes = GeometryUtility.CalculateFrustumPlanes(camera);
                 ret = GeometryUtility.TestPlanesAABB(planes, coll.bounds);
-
-                Debug.DrawLine(transform.position, camera.transform.position);
             }
 
             return ret;
@@ -146,7 +158,11 @@ namespace PortalGateSystem
             UpdateTransformOnPair(trans, trans.position, trans.rotation);
         }
 
-        public void UpdateTransformOnPair(Transform trans, Vector3 worldPos, Quaternion worldRot)
+        public void UpdateTransformOnPair(
+            Transform trans, 
+            Vector3 worldPos,
+            Quaternion worldRot
+            )
         {
             var localPos = transform.InverseTransformPoint(worldPos);
             var localRot = Quaternion.Inverse(transform.rotation) * worldRot;
